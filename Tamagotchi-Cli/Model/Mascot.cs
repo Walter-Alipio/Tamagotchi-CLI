@@ -22,22 +22,22 @@ public class Mascot
         skills += skill.ability.name + " ";
       }
     }
-    string pokemonType = string.Empty;
+    string pokemonTypes = string.Empty;
     if (types != null)
     {
       foreach (var type in types)
       {
-        pokemonType += type.type.name + " ";
+        pokemonTypes += type.type.name + " ";
       }
     }
 
-    string response = $"Nome: {name}\n" +
+    string response = $"Nome: {name.ToUpper()}\n" +
                       $"Altura: {height}\n" +
                       $"Peso: {weight}\n" +
                       "Habilidades: " +
-                      skills + "\n" +
+                      skills.Trim().Replace(" ", ", ") + "\n" +
                       "Tipo: " +
-                      pokemonType
+                      pokemonTypes.Trim().Replace(" ", ", ")
                        ;
     return response;
   }
