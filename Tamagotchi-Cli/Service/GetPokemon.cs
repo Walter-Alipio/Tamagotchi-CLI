@@ -1,4 +1,4 @@
-namespace SevenDaysOfCode.TamagotchiCli;
+namespace SevenDaysOfCode.TamagotchiCli.Service;
 
 public class GetPokemon
 {
