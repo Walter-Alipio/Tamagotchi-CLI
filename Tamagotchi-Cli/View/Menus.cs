@@ -111,7 +111,7 @@ public class Menus
     Console.ReadKey();
   }
 
-  public static void ShowMyMascotsList(List<Mascot> adoptedMascots)
+  public static void ShowMyMascotsList(List<Pokemon> adoptedMascots)
   {
 
     if (!adoptedMascots.Any())
@@ -154,6 +154,7 @@ public class Menus
 
   public static void ShowPokemonHealth(string pokemonName, string pokemonDescription, string pokemonHungry, string pokemonMood, int pokemonAge)
   {
+    pokemonName = pokemonName.ToUpper();
     System.Console.WriteLine();
     System.Console.WriteLine("-------------------------------------");
     System.Console.WriteLine(" ");
