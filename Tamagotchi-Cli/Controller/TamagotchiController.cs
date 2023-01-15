@@ -1,16 +1,19 @@
 
 using SevenDaysOfCode.TamagotchiCli.Service;
 using SevenDaysOfCode.TamagotchiCli.Model;
+using SevenDaysOfCode.TamagotchiCli.Data.DTO;
 
 public class TamagotchiController
 {
   private string? _userName = String.Empty;
   private string? _mascotName = String.Empty;
   private readonly TamagotchiService _tamagotchiService;
+  private readonly AdoptedPokemonService _pokemonService;
 
-  public TamagotchiController(TamagotchiService tamagotchiService)
+  public TamagotchiController(TamagotchiService tamagotchiService, AdoptedPokemonService adopetPokemonService)
   {
     _tamagotchiService = tamagotchiService;
+    _pokemonService = adopetPokemonService;
   }
 
 
@@ -66,25 +69,23 @@ public class TamagotchiController
 
             if (!String.IsNullOrEmpty(_mascotName))
             {
-              await MascotMenuAsync(_userName, _mascotName, _tamagotchiService);
+              await MascotMenuAsync();
             }
             break;
           case 2:
             System.Console.Clear();
-            Menus.ShowMyMascotsList(_tamagotchiService.GetMascotsList());
-            if (_tamagotchiService.GetMascotsList().Any())
+            Menus.ShowMyMascotsList(_pokemonService.GetMascotsList());
+            if (_pokemonService.GetMascotsList().Any())
             {
 
-              var pokemon = AdoptedMascotsMenu(_userName, _mascotName, _tamagotchiService);
+              var pokemon = AdoptedMascotsMenu();
 
               if (string.IsNullOrEmpty(pokemon.name))
               {
                 break;
               }
 
-              AdoptedMascotsMenuOptions(_userName, pokemon, _tamagotchiService);
-
-
+              AdoptedMascotsMenuOptions(pokemon);
             }
             break;
           case 3:
@@ -115,7 +116,7 @@ public class TamagotchiController
 
   }
 
-  private static async Task MascotMenuAsync(string userName, string mascotName, TamagotchiService tamagotchiService)
+  private async Task MascotMenuAsync()
   {
     var goBack = false;
     while (goBack == false)
@@ -123,7 +124,7 @@ public class TamagotchiController
       try
       {
         System.Console.Clear();
-        Menus.MascotMenu(userName, mascotName);
+        Menus.MascotMenu(_userName, _mascotName);
         var mascotMenuOpt = Console.ReadLine();
 
         if (String.IsNullOrEmpty(mascotMenuOpt))
@@ -139,11 +140,11 @@ public class TamagotchiController
           Menus.ShowErrorMessage(" Opção inválida.");
           continue;
         }
-        Mascot pokemon;
+        ReadPokemonDTO pokemon;
         switch (opt)
         {
           case 1:
-            pokemon = await tamagotchiService.GetPokemonDescriptionAsync(mascotName);
+            pokemon = await _tamagotchiService.GetPokemonDescriptionAsync(_mascotName);
 
             if (pokemon is null)
             {
@@ -157,7 +158,7 @@ public class TamagotchiController
             break;
 
           case 2:
-            pokemon = await tamagotchiService.GetPokemonDescriptionAsync(mascotName);
+            pokemon = await _tamagotchiService.GetPokemonDescriptionAsync(_mascotName);
 
             if (pokemon is null)
             {
@@ -165,15 +166,15 @@ public class TamagotchiController
               break;
             }
 
-            if (tamagotchiService.IsMascotAlreadAdopted(pokemon))
+            if (_tamagotchiService.IsMascotAlreadAdopted(pokemon))
             {
               Menus.ShowErrorMessage("Você já adotou esse pokemon.");
               break;
             }
 
-            tamagotchiService.AdoptMascot(pokemon);
+            _pokemonService.AdoptMascot(pokemon);
 
-            Menus.MascotAdopted(userName, pokemon.name);
+            Menus.MascotAdopted(_userName, pokemon.name);
 
             System.Console.Clear();
             goBack = true;
@@ -195,10 +196,9 @@ public class TamagotchiController
     }
   }
 
-
-  private static Mascot? AdoptedMascotsMenu(string userName, string mascotName, TamagotchiService tamagotchiService)
+  private Pokemon? AdoptedMascotsMenu()
   {
-    Mascot pokemon = new Mascot();
+    Pokemon pokemon = new Pokemon();
 
     bool goBack = false;
     while (goBack == false)
@@ -213,14 +213,13 @@ public class TamagotchiController
           return pokemon;
         }
 
-        if (opt < 0 || opt > tamagotchiService.GetMascotsList().Count())
+        if (opt < 0 || opt > _pokemonService.GetMascotsList().Count())
         {
           Menus.ShowErrorMessage($"{opt} não é uma opção válida");
           break;
         }
 
-
-        var pokemonsList = tamagotchiService.GetMascotsList();
+        var pokemonsList = _pokemonService.GetMascotsList();
         pokemon = pokemonsList[opt - 1];
 
         if (pokemon is null)
@@ -242,7 +241,7 @@ public class TamagotchiController
     return pokemon;
   }
 
-  private static void AdoptedMascotsMenuOptions(string _userName, Mascot pokemon, TamagotchiService _tamagotchiService)
+  private void AdoptedMascotsMenuOptions(Pokemon pokemon)
   {
     bool goBack = false;
     while (goBack == false)
@@ -258,10 +257,12 @@ public class TamagotchiController
       switch (opt)
       {
         case 1:
-          Menus.ShowPokemonHealth(pokemon.name, pokemon.ToString(), pokemon.PokemonHungry(), pokemon.PokemonMood(), pokemon.Age);
+          string health = _pokemonService.GetPokemonHealth(pokemon);
+          string mood = _pokemonService.GetPokemonMood(pokemon);
+          Menus.ShowPokemonHealth(pokemon.name, pokemon.ToString(), health, mood, pokemon.Age);
           break;
         case 2:
-          if (_tamagotchiService.FeedPokemon(pokemon))
+          if (_pokemonService.FeedPokemon(pokemon))
           {
             Menus.HappyMascotFace($"{pokemon.name} foi alimentado.");
             break;
@@ -269,7 +270,7 @@ public class TamagotchiController
           Menus.HappyMascotFace($"{pokemon.name} já está satisfeito");
           break;
         case 3:
-          if (_tamagotchiService.PlayWithPokemon(pokemon))
+          if (_pokemonService.PlayWithPokemon(pokemon))
           {
             Menus.HappyMascotFace($"Você brincou com {pokemon.name} e ele ficou contente.");
             break;
@@ -286,7 +287,6 @@ public class TamagotchiController
       }
 
     }
-
 
   }
 }
