@@ -1,22 +1,13 @@
 
 using SevenDaysOfCode.TamagotchiCli.Model;
+using SevenDaysOfCode.TamagotchiCli.View.AscArt;
 
 public class Menus
 {
   public static void Presentation()
   {
     System.Console.Clear();
-    System.Console.WriteLine(
-      @"
-      
-████████╗░█████╗░███╗░░░███╗░█████╗░░██████╗░░█████╗░████████╗░█████╗░██╗░░██╗██╗
-╚══██╔══╝██╔══██╗████╗░████║██╔══██╗██╔════╝░██╔══██╗╚══██╔══╝██╔══██╗██║░░██║██║
-░░░██║░░░███████║██╔████╔██║███████║██║░░██╗░██║░░██║░░░██║░░░██║░░╚═╝███████║██║
-░░░██║░░░██╔══██║██║╚██╔╝██║██╔══██║██║░░╚██╗██║░░██║░░░██║░░░██║░░██╗██╔══██║██║
-░░░██║░░░██║░░██║██║░╚═╝░██║██║░░██║╚██████╔╝╚█████╔╝░░░██║░░░╚█████╔╝██║░░██║██║
-░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚═╝░░╚═╝░╚═════╝░░╚════╝░░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝╚═╝
-      "
-    );
+    System.Console.WriteLine(MainLogo.logo);
     System.Console.WriteLine(" ");
     System.Console.WriteLine(" ");
   }

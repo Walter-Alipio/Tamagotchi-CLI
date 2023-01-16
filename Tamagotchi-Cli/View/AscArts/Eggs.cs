@@ -2,7 +2,7 @@ namespace SevenDaysOfCode.TamagotchiCli.View.AscArt;
 
 public class Eggs
 {
-  public string eggEmptyBackground = @"
+  public readonly string eggEmptyBackground = @"
                                                                       
                                 ████████                                  
                               ██        ██                                
@@ -21,7 +21,7 @@ public class Eggs
                             ████        ████                              
                                 ████████                                  
                                               ";
-  public string eddFillBackground = @"
+  public readonly string eddFillBackground = @"
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -45,7 +45,7 @@ public class Eggs
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░";
 
-  public string eggHalfCracked1 = @"
+  public readonly string eggHalfCracked1 = @"
                                                                       
                                 ████████                                  
                               ██        ██                                
@@ -64,7 +64,7 @@ public class Eggs
                             ████        ████                              
                                 ████████                                  
                                               ";
-  public string eggHalfCracked2 = @"
+  public readonly string eggHalfCracked2 = @"
                                                                       
                                 ████████                                  
                               ██        ██                                
@@ -83,7 +83,7 @@ public class Eggs
                             ████        ████                              
                                 ████████                                  
                                               ";
-  public string eggHalfCracked3 = @"
+  public readonly string eggHalfCracked3 = @"
                                                                       
                                 ████████                                  
                               ██        ██                                

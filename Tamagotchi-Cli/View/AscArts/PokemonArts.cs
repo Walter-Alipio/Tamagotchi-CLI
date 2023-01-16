@@ -1,3 +1,4 @@
+namespace SevenDaysOfCode.TamagotchiCli.View.AscArt;
 public class PokemonArts
 {
 
