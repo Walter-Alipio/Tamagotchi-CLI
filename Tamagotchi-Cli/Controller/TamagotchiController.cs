@@ -275,7 +275,7 @@ public class TamagotchiController
             Menus.HappyMascotFace($"Você brincou com {pokemon.name} e ele ficou contente.");
             break;
           }
-          Menus.SadMascotFace($"Parece que {pokemon.name} está com muita fome");
+          Menus.SadMascotFace($"Parece que {pokemon.name} está com muita fome e não quer brincar agora");
           break;
         case 4:
           goBack = true;
