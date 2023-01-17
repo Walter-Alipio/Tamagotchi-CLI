@@ -10,10 +10,12 @@ public class Pokemon
   public List<AbilitiesClass>? abilities { get; set; }
   public List<Types>? types { get; set; }
   public DateTime AdoptedDate;
+  public bool FirstAppearance { get; set; }
 
   public Pokemon()
   {
     AdoptedDate = new DateTime();
+    FirstAppearance = true;
   }
 
   public int Age { get; set; }

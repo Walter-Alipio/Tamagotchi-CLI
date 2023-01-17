@@ -1,12 +1,11 @@
 
 using SevenDaysOfCode.TamagotchiCli.Service;
-using SevenDaysOfCode.TamagotchiCli.Model;
 using SevenDaysOfCode.TamagotchiCli.Data.DTO;
 
 public class TamagotchiController
 {
-  private string? _userName = String.Empty;
-  private string? _mascotName = String.Empty;
+  private string _userName = String.Empty;
+  private string _mascotName = String.Empty;
   private readonly TamagotchiService _tamagotchiService;
   private readonly AdoptedPokemonService _pokemonService;
 
@@ -26,7 +25,13 @@ public class TamagotchiController
       {
         Menus.Presentation();
         Menus.Login();
-        _userName = Console.ReadLine();
+        var input = Console.ReadLine();
+
+        if (string.IsNullOrEmpty(input))
+        {
+          throw new NullReferenceException("O nome deve ter no mínimo 3 e no máximo 15 caracteres");
+        }
+        _userName = input;
 
         opt = _tamagotchiService.ValidateUserName(_userName);
       }
@@ -35,6 +40,10 @@ public class TamagotchiController
         Menus.ShowErrorMessage(e.Message);
       }
       catch (ArgumentOutOfRangeException e)
+      {
+        Menus.ShowErrorMessage(e.Message);
+      }
+      catch (NullReferenceException e)
       {
         Menus.ShowErrorMessage(e.Message);
       }
@@ -63,6 +72,11 @@ public class TamagotchiController
             Menus.ChooseMascotList(_userName);
             var opt = Console.ReadLine();
 
+            if (opt is null)
+            {
+              throw new NullReferenceException("Opção inválida.");
+            }
+
             if (_tamagotchiService.InvalidInputOptions(opt)) continue;
 
             _mascotName = _tamagotchiService.SelectPokemonName(opt);
@@ -79,6 +93,10 @@ public class TamagotchiController
             {
 
               var pokemon = AdoptedMascotsMenu();
+              if (pokemon == null)
+              {
+                break;
+              }
 
               if (string.IsNullOrEmpty(pokemon.name))
               {
@@ -109,6 +127,10 @@ public class TamagotchiController
         break;
       }
       catch (ArgumentOutOfRangeException e)
+      {
+        Menus.ShowErrorMessage(e.Message);
+      }
+      catch (NullReferenceException e)
       {
         Menus.ShowErrorMessage(e.Message);
       }
@@ -174,7 +196,7 @@ public class TamagotchiController
 
             _pokemonService.AdoptMascot(pokemon);
 
-            Menus.MascotAdopted(_userName, pokemon.name);
+            Menus.MascotAdopted(_userName, pokemon.name!);
 
             System.Console.Clear();
             goBack = true;
@@ -188,7 +210,7 @@ public class TamagotchiController
             break;
         }
       }
-      catch (FormatException e)
+      catch (FormatException)
       {
         Menus.ShowErrorMessage("Utilize apenas números");
         continue;
@@ -196,9 +218,9 @@ public class TamagotchiController
     }
   }
 
-  private Pokemon? AdoptedMascotsMenu()
+  private ReadPokemonDTO? AdoptedMascotsMenu()
   {
-    Pokemon pokemon = new Pokemon();
+    ReadPokemonDTO pokemon = new ReadPokemonDTO();
 
     bool goBack = false;
     while (goBack == false)
@@ -210,7 +232,7 @@ public class TamagotchiController
         var opt = Convert.ToInt32(response);
         if (opt.Equals(0))
         {
-          return pokemon;
+          return null;
         }
 
         if (opt < 0 || opt > _pokemonService.GetMascotsList().Count())
@@ -241,14 +263,16 @@ public class TamagotchiController
     return pokemon;
   }
 
-  private void AdoptedMascotsMenuOptions(Pokemon pokemon)
+  private void AdoptedMascotsMenuOptions(ReadPokemonDTO pokemon)
   {
     bool goBack = false;
     while (goBack == false)
     {
 
       System.Console.Clear();
-      Menus.ShowMyMascotMenu(_userName, pokemon.name);
+      var firstAppearance = _pokemonService.IsAFirstAppearance(pokemon);
+
+      Menus.ShowMyMascotMenu(_userName, pokemon.name!, firstAppearance);
       var response = System.Console.ReadLine();
       if (_tamagotchiService.InvalidInputOptions(response)) continue;
 
@@ -259,7 +283,8 @@ public class TamagotchiController
         case 1:
           string health = _pokemonService.GetPokemonHealth(pokemon);
           string mood = _pokemonService.GetPokemonMood(pokemon);
-          Menus.ShowPokemonHealth(pokemon.name, pokemon.ToString(), health, mood, pokemon.Age);
+          int age = pokemon.Age;
+          Menus.ShowPokemonHealth(pokemon.name!, pokemon.ToString(), health, mood, age);
           break;
         case 2:
           if (_pokemonService.FeedPokemon(pokemon))
@@ -285,8 +310,7 @@ public class TamagotchiController
           Menus.ShowErrorMessage("Opção não encontrada");
           break;
       }
-
     }
-
   }
+
 }

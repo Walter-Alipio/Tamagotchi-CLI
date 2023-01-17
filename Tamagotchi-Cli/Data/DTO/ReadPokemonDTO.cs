@@ -9,13 +9,25 @@ public class ReadPokemonDTO
   public readonly int weight;
   public readonly List<AbilitiesClass>? abilities;
   public readonly List<Types>? types;
-  public ReadPokemonDTO(string? name, int height, int weight, List<AbilitiesClass>? abilities, List<Types>? types)
+  public readonly bool FirstAppearance;
+  public readonly int Age;
+
+  public ReadPokemonDTO(
+    string? name = "",
+    int height = 0,
+    int weight = 0,
+    List<AbilitiesClass>? abilities = null,
+    List<Types>? types = null,
+    bool firstAppearance = false,
+    int age = 0)
   {
     this.name = name;
     this.height = height;
     this.weight = weight;
     this.abilities = abilities;
     this.types = types;
+    FirstAppearance = firstAppearance;
+    Age = age;
   }
 
   public override string ToString()
