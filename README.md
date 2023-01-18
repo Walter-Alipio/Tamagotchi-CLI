@@ -6,12 +6,12 @@ Uma versão diferente dos antigos Tamagotchis onde você pode escolher um pokemo
 | --------------------- | --------------------------------------- |
 | :sparkles: Nome       | **7 days of code**                      |
 | :label: Tecnologias   | c# (tecnologias utilizadas)             |
-| :rocket: URL          | https://url-deploy.com.br               |
+| :rocket: URL          |                                         |
 | :fire: Desafio        | https://7daysofcode.io/matricula/csharp |
 
 <!-- Inserir imagem com a #vitrinedev ao final do link -->
 
-![](https://i.imgur.com/nqlNozS.png#vitrinedev)
+![Tamagotchi-Cli Login](https://i.imgur.com/nqlNozS.png#vitrinedev)
 
 ## Detalhes do projeto
 
