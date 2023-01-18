@@ -13,9 +13,23 @@ public class AdoptedPokemonService
     _mascotsDB = adoptedMascots;
   }
 
-  public List<Pokemon> GetMascotsList()
+  public List<ReadPokemonDTO> GetMascotsList()
   {
-    return new List<Pokemon>(_mascotsDB.AdoptedMascotsList);
+    List<ReadPokemonDTO> readList = new List<ReadPokemonDTO>();
+    foreach (var pokemon in _mascotsDB.AdoptedMascotsList)
+    {
+      readList.Add(
+        new ReadPokemonDTO(
+        pokemon.name,
+        pokemon.height,
+        pokemon.weight,
+        new List<Model.MascotDescription.AbilitiesClass>(pokemon.abilities),
+        new List<Model.MascotDescription.Types>(pokemon.types),
+        pokemon.FirstAppearance
+      ));
+    }
+
+    return readList;
   }
 
   public void AdoptMascot(ReadPokemonDTO mascot)
@@ -36,8 +50,9 @@ public class AdoptedPokemonService
     _mascotsDB.AdoptedMascotsList.Add(pokemon);
   }
 
-  public bool FeedPokemon(Pokemon pokemon)
+  public bool FeedPokemon(ReadPokemonDTO p)
   {
+    var pokemon = GetPokemonFromList(p);
     if (pokemon.Hungry < 4) return false;
 
     pokemon.FeedPokemon();
@@ -45,8 +60,9 @@ public class AdoptedPokemonService
     return true;
   }
 
-  public bool PlayWithPokemon(Pokemon pokemon)
+  public bool PlayWithPokemon(ReadPokemonDTO p)
   {
+    var pokemon = GetPokemonFromList(p);
     if (pokemon.Hungry > 8) return false;
 
     pokemon.PlayWithPokemon();
@@ -54,7 +70,7 @@ public class AdoptedPokemonService
     return true;
   }
 
-  public string GetPokemonHealth(Pokemon p)
+  public string GetPokemonHealth(ReadPokemonDTO p)
   {
 
     var pokemon = GetPokemonFromList(p);
@@ -66,7 +82,7 @@ public class AdoptedPokemonService
     return "está alimentado";
   }
 
-  public string GetPokemonMood(Pokemon p)
+  public string GetPokemonMood(ReadPokemonDTO p)
   {
     var pokemon = GetPokemonFromList(p);
 
@@ -77,7 +93,18 @@ public class AdoptedPokemonService
     return "está feliz!";
   }
 
-  private Pokemon? GetPokemonFromList(Pokemon pokemon)
+  public bool IsAFirstAppearance(ReadPokemonDTO p)
+  {
+    var pokemon = GetPokemonFromList(p);
+
+    if (pokemon.FirstAppearance)
+    {
+      pokemon.FirstAppearance = false;
+      return true;
+    }
+    return false;
+  }
+  private Pokemon? GetPokemonFromList(ReadPokemonDTO pokemon)
   {
     return _mascotsDB.AdoptedMascotsList.Where(p => p.name == pokemon.name).Single();
   }
