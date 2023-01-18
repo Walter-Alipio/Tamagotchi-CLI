@@ -4,7 +4,7 @@ Uma versão diferente dos antigos Tamagotchis onde você pode escolher um pokemo
 
 | :placard: Vitrine.Dev |                                         |
 | --------------------- | --------------------------------------- |
-| :sparkles: Nome       | **7 days of code**                      |
+| :sparkles: Nome       | **7 days of code - Tamagotchi Cli**     |
 | :label: Tecnologias   | c# (tecnologias utilizadas)             |
 | :rocket: URL          |                                         |
 | :fire: Desafio        | https://7daysofcode.io/matricula/csharp |
