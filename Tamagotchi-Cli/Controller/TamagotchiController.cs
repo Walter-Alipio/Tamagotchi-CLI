@@ -4,313 +4,316 @@ using SevenDaysOfCode.TamagotchiCli.Data.DTO;
 
 public class TamagotchiController
 {
-  private string _userName = String.Empty;
-  private string _mascotName = String.Empty;
-  private readonly TamagotchiService _tamagotchiService;
-  private readonly AdoptedPokemonService _pokemonService;
+    private string _userName = String.Empty;
+    private string _mascotName = String.Empty;
+    private readonly TamagotchiService _tamagotchiService;
+    private readonly AdoptedPokemonService _pokemonService;
 
-  public TamagotchiController(TamagotchiService tamagotchiService, AdoptedPokemonService adopetPokemonService)
-  {
-    _tamagotchiService = tamagotchiService;
-    _pokemonService = adopetPokemonService;
-  }
-
-
-  public void LoginMenu()
-  {
-    bool opt = false;
-    while (opt == false)
+    public TamagotchiController(TamagotchiService tamagotchiService, AdoptedPokemonService adopetPokemonService)
     {
-      try
-      {
-        Menus.Presentation();
-        Menus.Login();
-        var input = Console.ReadLine();
-
-        if (string.IsNullOrEmpty(input))
-        {
-          throw new NullReferenceException("O nome deve ter no mínimo 3 e no máximo 15 caracteres");
-        }
-        _userName = input;
-
-        opt = _tamagotchiService.ValidateUserName(_userName);
-      }
-      catch (ArgumentNullException e)
-      {
-        Menus.ShowErrorMessage(e.Message);
-      }
-      catch (ArgumentOutOfRangeException e)
-      {
-        Menus.ShowErrorMessage(e.Message);
-      }
-      catch (NullReferenceException e)
-      {
-        Menus.ShowErrorMessage(e.Message);
-      }
-
+        _tamagotchiService = tamagotchiService;
+        _pokemonService = adopetPokemonService;
     }
-  }
 
-  public async Task MainMenuAsync()
-  {
 
-    bool menuOption = false;
-    while (menuOption == false)
+    public void LoginMenu()
     {
-      try
-      {
-        Menus.WelcomeMenu(_userName!);
-        var response = Console.ReadLine();
-        if (_tamagotchiService.InvalidInputOptions(response)) continue;
-
-        int option = Convert.ToInt32(response);
-
-        switch (option)
+        bool opt = false;
+        while (opt == false)
         {
-          case 1:
-            System.Console.Clear();
-            Menus.ChooseMascotList(_userName);
-            var opt = Console.ReadLine();
-
-            if (opt is null)
+            try
             {
-              throw new NullReferenceException("Opção inválida.");
+                Menus.Presentation();
+                Menus.Login();
+                var input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    throw new NullReferenceException("O nome deve ter no mínimo 3 e no máximo 15 caracteres");
+                }
+                _userName = input;
+
+                opt = _tamagotchiService.ValidateUserName(_userName);
+            }
+            catch (ArgumentNullException e)
+            {
+                Menus.ShowErrorMessage(e.Message);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Menus.ShowErrorMessage(e.Message);
+            }
+            catch (NullReferenceException e)
+            {
+                Menus.ShowErrorMessage(e.Message);
             }
 
-            if (_tamagotchiService.InvalidInputOptions(opt)) continue;
+        }
+    }
 
-            _mascotName = _tamagotchiService.SelectPokemonName(opt);
+    public async Task MainMenuAsync()
+    {
 
-            if (!String.IsNullOrEmpty(_mascotName))
+        bool menuOption = false;
+        while (menuOption == false)
+        {
+            try
             {
-              await MascotMenuAsync();
+                Menus.WelcomeMenu(_userName!);
+                System.Console.Write("    ");
+                var response = Console.ReadLine();
+                if (_tamagotchiService.InvalidInputOptions(response)) continue;
+
+                int option = Convert.ToInt32(response);
+
+                switch (option)
+                {
+                    case 1:
+                        System.Console.Clear();
+                        Menus.ChooseMascotList(_userName);
+                        var opt = Console.ReadLine();
+
+                        if (opt is null)
+                        {
+                            throw new NullReferenceException("Opção inválida.");
+                        }
+
+                        if (_tamagotchiService.InvalidInputOptions(opt)) continue;
+
+                        _mascotName = _tamagotchiService.SelectPokemonName(opt);
+
+                        if (!String.IsNullOrEmpty(_mascotName))
+                        {
+                            await MascotMenuAsync();
+                        }
+                        break;
+                    case 2:
+                        System.Console.Clear();
+                        Menus.ShowMyMascotsList(_pokemonService.GetMascotsList());
+                        if (_pokemonService.GetMascotsList().Any())
+                        {
+
+                            var pokemon = AdoptedMascotsMenu();
+                            if (pokemon == null)
+                            {
+                                break;
+                            }
+
+                            if (string.IsNullOrEmpty(pokemon.name))
+                            {
+                                break;
+                            }
+
+                            AdoptedMascotsMenuOptions(pokemon);
+                        }
+                        break;
+                    case 3:
+                        System.Console.Clear();
+                        Menus.ExitScreen();
+                        menuOption = true;
+                        break;
+                    default:
+                        Menus.ShowErrorMessage("Opção não encontrada");
+                        break;
+                }
             }
-            break;
-          case 2:
-            System.Console.Clear();
-            Menus.ShowMyMascotsList(_pokemonService.GetMascotsList());
-            if (_pokemonService.GetMascotsList().Any())
+            catch (FormatException)
             {
+                Menus.ShowErrorMessage("Utilize apenas números");
 
-              var pokemon = AdoptedMascotsMenu();
-              if (pokemon == null)
-              {
+            }
+            catch (ArgumentNullException e)
+            {
+                System.Console.Clear();
+                System.Console.WriteLine(e.StackTrace);
+                System.Console.WriteLine(e.Message);
                 break;
-              }
-
-              if (string.IsNullOrEmpty(pokemon.name))
-              {
-                break;
-              }
-
-              AdoptedMascotsMenuOptions(pokemon);
             }
-            break;
-          case 3:
-            menuOption = true;
-            break;
-          default:
-            Menus.ShowErrorMessage("Opção não encontrada");
-            break;
+            catch (ArgumentOutOfRangeException e)
+            {
+                Menus.ShowErrorMessage(e.Message);
+            }
+            catch (NullReferenceException e)
+            {
+                Menus.ShowErrorMessage(e.Message);
+            }
         }
-      }
-      catch (FormatException)
-      {
-        Menus.ShowErrorMessage("Utilize apenas números");
 
-      }
-      catch (ArgumentNullException e)
-      {
-        System.Console.Clear();
-        System.Console.WriteLine(e.StackTrace);
-        System.Console.WriteLine(e.Message);
-        break;
-      }
-      catch (ArgumentOutOfRangeException e)
-      {
-        Menus.ShowErrorMessage(e.Message);
-      }
-      catch (NullReferenceException e)
-      {
-        Menus.ShowErrorMessage(e.Message);
-      }
     }
 
-  }
-
-  private async Task MascotMenuAsync()
-  {
-    var goBack = false;
-    while (goBack == false)
+    private async Task MascotMenuAsync()
     {
-      try
-      {
-        System.Console.Clear();
-        Menus.MascotMenu(_userName, _mascotName);
-        var mascotMenuOpt = Console.ReadLine();
-
-        if (String.IsNullOrEmpty(mascotMenuOpt))
+        var goBack = false;
+        while (goBack == false)
         {
-          Menus.ShowErrorMessage(" Não entendi sua resposta, pode repetir? ");
-          continue;
-        }
-
-        int opt = Convert.ToInt32(mascotMenuOpt);
-
-        if (opt <= 0 || opt >= 4)
-        {
-          Menus.ShowErrorMessage(" Opção inválida.");
-          continue;
-        }
-        ReadPokemonDTO pokemon;
-        switch (opt)
-        {
-          case 1:
-            pokemon = await _tamagotchiService.GetPokemonDescriptionAsync(_mascotName);
-
-            if (pokemon is null)
+            try
             {
-              Menus.ShowErrorMessage("Dados inacessíveis no momento.");
-              break;
+                System.Console.Clear();
+                Menus.MascotMenu(_userName, _mascotName);
+                var mascotMenuOpt = Console.ReadLine();
+
+                if (String.IsNullOrEmpty(mascotMenuOpt))
+                {
+                    Menus.ShowErrorMessage(" Não entendi sua resposta, pode repetir? ");
+                    continue;
+                }
+
+                int opt = Convert.ToInt32(mascotMenuOpt);
+
+                if (opt <= 0 || opt >= 4)
+                {
+                    Menus.ShowErrorMessage(" Opção inválida.");
+                    continue;
+                }
+                ReadPokemonDTO pokemon;
+                switch (opt)
+                {
+                    case 1:
+                        pokemon = await _tamagotchiService.GetPokemonDescriptionAsync(_mascotName);
+
+                        if (pokemon is null)
+                        {
+                            Menus.ShowErrorMessage("Dados inacessíveis no momento.");
+                            break;
+                        }
+
+                        Menus.MascotDescription(pokemon.ToString());
+                        System.Console.WriteLine("Pressione uma tecla para continuar...");
+                        Console.ReadKey();
+                        break;
+
+                    case 2:
+                        pokemon = await _tamagotchiService.GetPokemonDescriptionAsync(_mascotName);
+
+                        if (pokemon is null)
+                        {
+                            Menus.ShowErrorMessage("Dados inacessíveis no momento.");
+                            break;
+                        }
+
+                        if (_tamagotchiService.IsMascotAlreadAdopted(pokemon))
+                        {
+                            Menus.ShowErrorMessage("Você já adotou esse pokemon.");
+                            break;
+                        }
+
+                        _pokemonService.AdoptMascot(pokemon);
+
+                        Menus.MascotAdopted(_userName, pokemon.name!);
+
+                        System.Console.Clear();
+                        goBack = true;
+                        break;
+
+                    case 3:
+                        goBack = true;
+                        System.Console.Clear();
+                        break;
+                    default:
+                        break;
+                }
             }
-
-            Menus.MascotDescription(pokemon.ToString());
-            System.Console.WriteLine("Pressione uma tecla para continuar...");
-            Console.ReadKey();
-            break;
-
-          case 2:
-            pokemon = await _tamagotchiService.GetPokemonDescriptionAsync(_mascotName);
-
-            if (pokemon is null)
+            catch (FormatException)
             {
-              Menus.ShowErrorMessage("Dados inacessíveis no momento.");
-              break;
+                Menus.ShowErrorMessage("Utilize apenas números");
+                continue;
             }
-
-            if (_tamagotchiService.IsMascotAlreadAdopted(pokemon))
-            {
-              Menus.ShowErrorMessage("Você já adotou esse pokemon.");
-              break;
-            }
-
-            _pokemonService.AdoptMascot(pokemon);
-
-            Menus.MascotAdopted(_userName, pokemon.name!);
-
-            System.Console.Clear();
-            goBack = true;
-            break;
-
-          case 3:
-            goBack = true;
-            System.Console.Clear();
-            break;
-          default:
-            break;
         }
-      }
-      catch (FormatException)
-      {
-        Menus.ShowErrorMessage("Utilize apenas números");
-        continue;
-      }
     }
-  }
 
-  private ReadPokemonDTO? AdoptedMascotsMenu()
-  {
-    ReadPokemonDTO pokemon = new ReadPokemonDTO();
-
-    bool goBack = false;
-    while (goBack == false)
+    private ReadPokemonDTO? AdoptedMascotsMenu()
     {
-      try
-      {
-        var response = System.Console.ReadLine();
+        ReadPokemonDTO pokemon = new ReadPokemonDTO();
 
-        var opt = Convert.ToInt32(response);
-        if (opt.Equals(0))
+        bool goBack = false;
+        while (goBack == false)
         {
-          return null;
-        }
+            try
+            {
+                var response = System.Console.ReadLine();
 
-        if (opt < 0 || opt > _pokemonService.GetMascotsList().Count())
-        {
-          Menus.ShowErrorMessage($"{opt} não é uma opção válida");
-          break;
-        }
+                var opt = Convert.ToInt32(response);
+                if (opt.Equals(0))
+                {
+                    return null;
+                }
 
-        var pokemonsList = _pokemonService.GetMascotsList();
-        pokemon = pokemonsList[opt - 1];
+                if (opt < 0 || opt > _pokemonService.GetMascotsList().Count())
+                {
+                    Menus.ShowErrorMessage($"{opt} não é uma opção válida");
+                    break;
+                }
 
-        if (pokemon is null)
-        {
-          Menus.ShowErrorMessage($"Desculpe, não consegui encontra-lo.");
-          break;
+                var pokemonsList = _pokemonService.GetMascotsList();
+                pokemon = pokemonsList[opt - 1];
+
+                if (pokemon is null)
+                {
+                    Menus.ShowErrorMessage($"Desculpe, não consegui encontra-lo.");
+                    break;
+                }
+
+                return pokemon;
+            }
+            catch (ArgumentException e)
+            {
+                System.Console.Clear();
+                System.Console.WriteLine(e.StackTrace);
+                System.Console.WriteLine(e.Message);
+            }
         }
 
         return pokemon;
-      }
-      catch (ArgumentException e)
-      {
-        System.Console.Clear();
-        System.Console.WriteLine(e.StackTrace);
-        System.Console.WriteLine(e.Message);
-      }
     }
 
-    return pokemon;
-  }
-
-  private void AdoptedMascotsMenuOptions(ReadPokemonDTO pokemon)
-  {
-    bool goBack = false;
-    while (goBack == false)
+    private void AdoptedMascotsMenuOptions(ReadPokemonDTO pokemon)
     {
+        bool goBack = false;
+        while (goBack == false)
+        {
 
-      System.Console.Clear();
-      var firstAppearance = _pokemonService.IsAFirstAppearance(pokemon);
+            System.Console.Clear();
+            var firstAppearance = _pokemonService.IsAFirstAppearance(pokemon);
 
-      Menus.ShowMyMascotMenu(_userName, pokemon.name!, firstAppearance);
-      var response = System.Console.ReadLine();
-      if (_tamagotchiService.InvalidInputOptions(response)) continue;
+            Menus.ShowMyMascotMenu(_userName, pokemon.name!, firstAppearance);
+            var response = System.Console.ReadLine();
+            if (_tamagotchiService.InvalidInputOptions(response)) continue;
 
-      var opt = Convert.ToInt32(response);
+            var opt = Convert.ToInt32(response);
 
-      switch (opt)
-      {
-        case 1:
-          string health = _pokemonService.GetPokemonHealth(pokemon);
-          string mood = _pokemonService.GetPokemonMood(pokemon);
-          int age = pokemon.Age;
-          Menus.ShowPokemonHealth(pokemon.name!, pokemon.ToString(), health, mood, age);
-          break;
-        case 2:
-          if (_pokemonService.FeedPokemon(pokemon))
-          {
-            Menus.HappyMascotFace($"{pokemon.name} foi alimentado.");
-            break;
-          }
-          Menus.HappyMascotFace($"{pokemon.name} já está satisfeito");
-          break;
-        case 3:
-          if (_pokemonService.PlayWithPokemon(pokemon))
-          {
-            Menus.HappyMascotFace($"Você brincou com {pokemon.name} e ele ficou contente.");
-            break;
-          }
-          Menus.SadMascotFace($"Parece que {pokemon.name} está com muita fome e não quer brincar agora");
-          break;
-        case 4:
-          goBack = true;
-          break;
+            switch (opt)
+            {
+                case 1:
+                    string health = _pokemonService.GetPokemonHealth(pokemon);
+                    string mood = _pokemonService.GetPokemonMood(pokemon);
+                    int age = pokemon.Age;
+                    Menus.ShowPokemonHealth(pokemon.name!, pokemon.ToString(), health, mood, age);
+                    break;
+                case 2:
+                    if (_pokemonService.FeedPokemon(pokemon))
+                    {
+                        Menus.HappyMascotFace($"{pokemon.name} foi alimentado.");
+                        break;
+                    }
+                    Menus.HappyMascotFace($"{pokemon.name} já está satisfeito");
+                    break;
+                case 3:
+                    if (_pokemonService.PlayWithPokemon(pokemon))
+                    {
+                        Menus.HappyMascotFace($"Você brincou com {pokemon.name} e ele ficou contente.");
+                        break;
+                    }
+                    Menus.SadMascotFace($"Parece que {pokemon.name} está com muita fome e não quer brincar agora");
+                    break;
+                case 4:
+                    goBack = true;
+                    break;
 
-        default:
-          Menus.ShowErrorMessage("Opção não encontrada");
-          break;
-      }
+                default:
+                    Menus.ShowErrorMessage("Opção não encontrada");
+                    break;
+            }
+        }
     }
-  }
 
 }
