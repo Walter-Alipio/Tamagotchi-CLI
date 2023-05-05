@@ -35,6 +35,16 @@ public class TamagotchiService
     var pokemonDescription = await GetPokemonFromAPI.GetPokemonDescription(mascotName);
     var mascot = JsonSerializer.Deserialize<CreatePokemonDTO>(pokemonDescription);
 
+    if (mascot is null)
+    {
+      throw new NullReferenceException();
+    }
+
+    if (mascot.abilities is null || mascot.types is null)
+    {
+      throw new ArgumentNullException();
+    }
+
     var pokemon = new ReadPokemonDTO(
       mascot.name,
       mascot.height,

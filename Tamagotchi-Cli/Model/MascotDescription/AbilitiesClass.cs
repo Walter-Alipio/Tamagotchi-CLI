@@ -2,7 +2,7 @@ namespace SevenDaysOfCode.TamagotchiCli.Model.MascotDescription;
 
 public class AbilitiesClass
 {
-  public AbilityClass? ability { get; set; }
+  public AbilityClass ability { get; set; } = new();
 
   public override string ToString()
   {
@@ -12,5 +12,5 @@ public class AbilitiesClass
 
 public class AbilityClass
 {
-  public string? name { get; set; }
+  public string name { get; set; } = string.Empty;
 }

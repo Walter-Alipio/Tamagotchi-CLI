@@ -19,13 +19,13 @@ public class AdoptedPokemonService
     foreach (var pokemon in _mascotsDB.AdoptedMascotsList)
     {
       readList.Add(
-        new ReadPokemonDTO(
-        pokemon.name,
-        pokemon.height,
-        pokemon.weight,
-        new List<Model.MascotDescription.AbilitiesClass>(pokemon.abilities),
-        new List<Model.MascotDescription.Types>(pokemon.types),
-        pokemon.FirstAppearance
+              new ReadPokemonDTO(
+              pokemon.name,
+              pokemon.height,
+              pokemon.weight,
+              new List<Model.MascotDescription.AbilitiesClass>(pokemon.abilities),
+              new List<Model.MascotDescription.Types>(pokemon.types),
+              pokemon.FirstAppearance
       ));
     }
 
@@ -34,8 +34,12 @@ public class AdoptedPokemonService
 
   public void AdoptMascot(ReadPokemonDTO mascot)
   {
-    //Mapper
+    if (mascot.abilities is null || mascot.types is null)
+    {
+      throw new ArgumentNullException();
+    }
 
+    //Mapper
     Pokemon pokemon = new Pokemon()
     {
       name = mascot.name,
@@ -53,6 +57,10 @@ public class AdoptedPokemonService
   public bool FeedPokemon(ReadPokemonDTO p)
   {
     var pokemon = GetPokemonFromList(p);
+    if (pokemon is null)
+    {
+      throw new NullReferenceException();
+    }
     if (pokemon.Hungry < 4) return false;
 
     pokemon.FeedPokemon();
@@ -63,6 +71,10 @@ public class AdoptedPokemonService
   public bool PlayWithPokemon(ReadPokemonDTO p)
   {
     var pokemon = GetPokemonFromList(p);
+    if (pokemon is null)
+    {
+      throw new NullReferenceException();
+    }
     if (pokemon.Hungry > 8) return false;
 
     pokemon.PlayWithPokemon();
@@ -74,6 +86,10 @@ public class AdoptedPokemonService
   {
 
     var pokemon = GetPokemonFromList(p);
+    if (pokemon is null)
+    {
+      throw new NullReferenceException();
+    }
 
     if (pokemon.Hungry >= 6) return "está com muita fome";
 
@@ -85,6 +101,10 @@ public class AdoptedPokemonService
   public string GetPokemonMood(ReadPokemonDTO p)
   {
     var pokemon = GetPokemonFromList(p);
+    if (pokemon is null)
+    {
+      throw new NullReferenceException();
+    }
 
     if (pokemon.Mood < 3) return "está triste!";
 
@@ -96,6 +116,10 @@ public class AdoptedPokemonService
   public bool IsAFirstAppearance(ReadPokemonDTO p)
   {
     var pokemon = GetPokemonFromList(p);
+    if (pokemon is null)
+    {
+      throw new NullReferenceException();
+    }
 
     if (pokemon.FirstAppearance)
     {

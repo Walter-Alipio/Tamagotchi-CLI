@@ -7,8 +7,8 @@ public class Pokemon
   public string? name { get; set; }
   public int height { get; set; }
   public int weight { get; set; }
-  public List<AbilitiesClass>? abilities { get; set; }
-  public List<Types>? types { get; set; }
+  public List<AbilitiesClass> abilities { get; set; } = new();
+  public List<Types> types { get; set; } = new();
   public DateTime AdoptedDate;
   public bool FirstAppearance { get; set; }
 
@@ -38,11 +38,11 @@ public class Pokemon
     {
       foreach (var type in types)
       {
-        pokemonTypes += type.type.name + " ";
+        pokemonTypes += type.type?.name + " ";
       }
     }
 
-    string response = $"Nome: {name.ToUpper()}\n" +
+    string response = $"Nome: {name?.ToUpper()}\n" +
                       $"Altura: {height}\n" +
                       $"Peso: {weight}\n" +
                       "Habilidades: " +
