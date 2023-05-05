@@ -1,7 +1,6 @@
 using System.Text.Json;
 using SevenDaysOfCode.TamagotchiCli.Data;
 using SevenDaysOfCode.TamagotchiCli.Data.DTO;
-using SevenDaysOfCode.TamagotchiCli.Model;
 using SevenDaysOfCode.TamagotchiCli.Utils;
 
 namespace SevenDaysOfCode.TamagotchiCli.Service;

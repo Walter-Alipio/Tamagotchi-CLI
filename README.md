@@ -14,6 +14,21 @@ Uma versão diferente dos antigos Tamagotchis onde você pode escolher um pokemo
 
 ![Tamagotchi-Cli Login](./img/tamagotchi-1.gif#vitrinedev)
 
+## Detalhes do projeto
+
+Projeto proposto pela [Giulia Bordignon](https://www.linkedin.com/in/spacecoding/) para o desafio 7 days of code da Alura.
+
+- Objetivo Geral
+
+Construir em 7 dias uma versão console dos antigos tamagotchis que consuma dados de uma API externa.
+
+- Sobre o projeto
+
+Trata-se de uma aplicação console feita em C# e .Net6, que busca as informações sobre os pokemon na api: [Pokemon API](https://pokeapi.co/docs/v2) e possiblita ao usuário escolher um mascote para poder cuidar, podendo alimentá-lo e também brincar com ele. <br>
+
+- Extras
+
+Para incrementar o projeto, criei algumas animações utilizando o método [“Thread.Sleep”](https://learn.microsoft.com/pt-br/dotnet/api/system.threading.thread.sleep?view=net-7.0) e inseri imagens em asc. As asc arts foram retiradas dos sites: [Pokemon asc art](https://emojicombos.com/pokemon-ascii-art) , [Gerador de simbolos](https://fsymbols.com/pt/geradores/) e [Ovos em asc art](https://textart.sh/topic/egg)
 <br>
 
 <img src ="./img/tamagotchi-2.gif">
@@ -23,24 +38,6 @@ Uma versão diferente dos antigos Tamagotchis onde você pode escolher um pokemo
 <img src ="./img/tamagotchi-3.gif">
 
 <br>
-
-## Detalhes do projeto
-
-Projeto proposto pela [Giulia Bordignon](https://www.linkedin.com/in/spacecoding/) para o desafio 7 days of code da Alura.
-
-## Objetivo Geral
-
-Construir em 7 dias uma versão console dos antigos tamagotchis que consuma dados de uma API externa.
-
-## Sobre o projeto
-
-Trata-se de uma aplicação console feita em C# e .Net6, que busca as informações sobre os pokemon na api: [Pokemon API](https://pokeapi.co/docs/v2) e possiblita ao usuário escolher um mascote para poder cuidar, podendo alimentá-lo e também brincar com ele. <br>
-
-## Extras
-
-Para incrementar o projeto, criei algumas animações utilizando o método [“Thread.Sleep”](https://learn.microsoft.com/pt-br/dotnet/api/system.threading.thread.sleep?view=net-7.0) e inseri imagens em asc. <br>
-
-As asc arts foram retiradas dos sites: [Pokemon asc art](https://emojicombos.com/pokemon-ascii-art) , [Gerador de simbolos](https://fsymbols.com/pt/geradores/) e [Ovos em asc art](https://textart.sh/topic/egg)
 
 ## Habilidades desenvolvidas
 
